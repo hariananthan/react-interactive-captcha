@@ -1,8 +1,13 @@
 import React,{useState} from "react";
 import { Stage, Layer, Rect, Text } from 'react-konva';
+import {Button} from "react-bootstrap";
 
-function ColoredRect(){
+function ColoredRect(props){
   const pieces = [];
+  const colorsCollection=["blue","green","red","yellow","black","white"];
+  var colors = colorsCollection
+            .sort(function() { return .5 - Math.random() }) 
+            .slice(0, 2); 
   const n=6;
   var rectObj={};
 
@@ -11,14 +16,14 @@ function ColoredRect(){
     y:[20,20],
     width:[150,150],
     height:[150,150],
-    color:[],
+    color:colors,
   };
   var pieceValues={
     x:[220,225],
     y:[120,125],
     width:50,
     height:50,
-    color:["blue","red"],
+    color:colors,
   };
    
   function handleCaptchaCheck(){
@@ -30,12 +35,12 @@ function ColoredRect(){
   }
 
   if(placedCount==n){
+    props.handleClose();
     console.log("SUCCESS");
   }
 }
 
   function handleDrag(e){
-
     var targetObj={
       x:e.target.attrs.x,
       y:e.target.attrs.y,
@@ -43,23 +48,25 @@ function ColoredRect(){
       height:e.target.attrs.height,
     }
     var frameObj ={};
-    var Box1={
-      x:20,
-      y:20,
-      width:150,
-      height:150
+    var frame1={
+      x:frameValues.x[0],
+      y:frameValues.y[0],
+      width:frameValues.width[0],
+      height:frameValues.width[0],
+      color:frameValues.color[0]
     }
-    var Box2={
-      x:360,
-      y:20,
-      width:150,
-      height:150
+    var frame2={
+      x:frameValues.x[1],
+      y:frameValues.y[1],
+      width:frameValues.width[1],
+      height:frameValues.width[1],
+      color:frameValues.color[1]
     }
-    if(e.target.attrs.fill=="red"){
-      frameObj=Box1;
+    if(e.target.attrs.fill==frame1.color){
+      frameObj=frame1;
     }
-    else{
-      frameObj=Box2;
+    else if(e.target.attrs.fill==frame2.color){
+      frameObj=frame2;
     }
     if (rectIntersect(targetObj.x, targetObj.y, targetObj.width, targetObj.height, frameObj.x, frameObj.y, frameObj.width, frameObj.height)){
       rectObj[e.target.attrs.id]=true;
@@ -84,16 +91,22 @@ function ColoredRect(){
                 fill={pieceValues.color[i%2]}  draggable={true} onMouseUp={handleDrag} shadowBlur={5} />
       )
   }
+
   return (
     <div className="canvas">
-    <Stage width={"600"} height={"200"}>
+    <Stage width={600} height={200}>
     <Layer>
-      <Rect x={20} y={20} width={150}  height={150} stroke="red" shadowBlur={5} />
-      <Rect x={360}  y={20}  width={150}  height={150} stroke="blue" shadowBlur={5} />
+      <Rect x={frameValues.x[0]} y={frameValues.y[0]} width={frameValues.width[0]}  height={frameValues.height[0]} 
+          stroke={frameValues.color[0]} shadowBlur={5} />
+      <Rect x={frameValues.x[1]} y={frameValues.y[1]} width={frameValues.width[1]}  height={frameValues.height[1]} 
+          stroke={frameValues.color[1]} shadowBlur={5} />
       {pieces}
     </Layer>
     </Stage>
-    <button className="done-btn" onClick={handleCaptchaCheck}>Done</button>
+    <Button variant="secondary" className="done-btn" onClick={handleCaptchaCheck}>
+            Done
+    </Button>
+
     </div>
   );
   }

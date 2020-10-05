@@ -2,14 +2,12 @@
 
 .canvas{
   margin-left: 30%;
-  margin-right: 35%;
-  margin-top: 10%;
+  margin-right: 30%;
+  margin-top: 2%;
    background-color: rgb(137, 137, 196);
 }
 
 .done-btn{
-  margin-left: 50%;
+  margin-left: 45%;
 }
-
-
-
+.modal-90w { max-width: 90% !important; }
